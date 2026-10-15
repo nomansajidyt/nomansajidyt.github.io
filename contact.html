@@ -177,6 +177,7 @@
       submitBtn.innerHTML = 'Sending…';
       showStatus('', '');
 
+      /*
       try {
         const res = await fetch(FORMSPREE_ENDPOINT, {
           method: 'POST',
@@ -186,7 +187,7 @@
             _replyto: email,
             _subject: `Portfolio contact: ${name}`,
             message: messageText
-            /*,message_html: emailBody*/
+            ,message_html: emailBody
           })
         });
         if (res.ok) {
@@ -210,6 +211,43 @@
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Send Message <span aria-hidden="true">↗</span>';
       }
+        */
+
+      try {
+            const res = await fetch(FORMSPREE_ENDPOINT, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                name, 
+                email,
+                _replyto: email,
+                _subject: `Portfolio contact: ${name}`,
+                message: messageText,         // Plain text fallback
+                message_html: emailBody     // Sends the actual rich text formatting to Formspree
+              })
+            });
+
+            if (res.ok) {
+              showStatus('Message sent successfully. Thank you!', 'success');
+              form.reset();
+              if (typeof quill !== 'undefined') quill.setContents([]);
+            } else {
+              const data = await res.json().catch(() => ({}));
+              throw new Error(data.error || 'Something went wrong. Please try again or email me directly.');
+            }
+        } catch (err) {
+            if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
+              const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+              const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${messageText}`);
+              window.location.href = `mailto:nomansajidyt1@gmail.com?subject=${subject}&body=${body}`;
+              showStatus('Opening your email client… (configure Formspree for direct sending)', 'success');
+            } else {
+              showStatus(err.message || 'Failed to send. Please email me directly.', 'error');
+            }
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Send Message <span aria-hidden="true">↗</span>';
+        }
     });
 
     function showStatus(msg, type) {
