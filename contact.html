@@ -58,7 +58,7 @@
             <div class="contact-meta">
               <a href="mailto:nomansajidyt1@gmail.com">
                 <span class="icon">✉</span>
-                nomansajidyt1@gmail.com
+                Email
               </a>
               <a href="https://www.linkedin.com/in/omgns/" target="_blank" rel="noreferrer">
                 <span class="icon">in</span>
@@ -103,7 +103,7 @@
     <div class="container footer-inner">
       <div>
         © <span id="year">2026</span> Noman Sajid
-        <div class="edit-note">Independent academic portfolio · Not an official university website</div>
+        <!--<div class="edit-note">Independent academic portfolio</div>-->
       </div>
       <div class="footer-links">
         <a href="contact.html">Contact</a>
@@ -185,8 +185,8 @@
             name, email,
             _replyto: email,
             _subject: `Portfolio contact: ${name}`,
-            message: messageText,
-            message_html: emailBody
+            message: messageText
+            /*,message_html: emailBody*/
           })
         });
         if (res.ok) {
