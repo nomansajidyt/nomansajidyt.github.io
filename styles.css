@@ -298,12 +298,15 @@ h1 .accent {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-radius: 22px;
 }
 
 .portrait img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Ensures the whole picture is fully contained and visible */
+    object-fit: cover;     /* Fills the entire width and container bounds */
+    object-position: top;  /* Focuses/zooms starting from the top of the image */
+    border-radius: inherit; /* Inherits the rounded corners from the parent container */
 }
 .portrait svg { width: 100%; height: 100%; }
 .portrait-note { padding: 20px 16px 14px; }
