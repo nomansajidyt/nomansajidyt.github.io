@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1628">
+  <meta name="description" content="Contact Noman Sajid — Prospective PhD student. Research conversations welcome.">
+  <title>Contact — Noman Sajid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <header class="topbar" id="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Noman Sajid home">
+        <span class="brand-mark">NS</span>
+        <span class="brand-name">Noman Sajid<small>PhD Portfolio</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="research.html">Research</a>
+        <a href="experience.html">Path</a>
+        <a href="contact.html" class="contact-link active">Connect ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero hero-compact">
+      <div class="container">
+        <div class="eyebrow">Let’s talk research</div>
+        <h1 class="page-title">Good doctoral work<br>starts with conversation.</h1>
+        <p class="hero-copy" style="animation-delay:0.45s">
+          Reach out about research fit, collaboration, or the PhD path. I read every message.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-intro reveal">
+            <p>
+              I’m eager to connect with faculty, current PhD students, and researchers whose work intersects
+              with the questions I’m pursuing. Feel free to introduce yourself and share what you’re working on.
+            </p>
+            <div class="contact-meta">
+              <a href="mailto:nomansajidyt1@gmail.com">
+                <span class="icon">✉</span>
+                nomansajidyt1@gmail.com
+              </a>
+              <a href="https://www.linkedin.com/in/omgns/" target="_blank" rel="noreferrer">
+                <span class="icon">in</span>
+                LinkedIn
+              </a>
+              <a href="https://scholar.google.com/" target="_blank" rel="noreferrer">
+                <span class="icon">🎓</span>
+                Google Scholar
+              </a>
+            </div>
+          </div>
+
+          <div class="form-card reveal reveal-delay-1">
+            <form id="contactForm" novalidate>
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Jane Researcher" required autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@university.edu" required autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <div id="editor" aria-label="Message editor"></div>
+                <input type="hidden" id="messageHtml" name="message">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-submit" id="submitBtn">
+                  Send Message <span aria-hidden="true">↗</span>
+                </button>
+                <span class="form-status" id="formStatus" role="status" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        © <span id="year">2026</span> Noman Sajid
+        <div class="edit-note">Independent academic portfolio · Not an official university website</div>
+      </div>
+      <div class="footer-links">
+        <a href="contact.html">Contact</a>
+        <a href="https://www.linkedin.com/in/omgns/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+        <a href="https://scholar.google.com/" target="_blank" rel="noreferrer">Google Scholar ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  <script src="main.js"></script>
+  <script>
+    const quill = new Quill('#editor', {
+      theme: 'snow',
+      placeholder: 'Write your message… (you can use bold, lists, links…)',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['link'],
+          ['clean']
+        ]
+      }
+    });
+
+    // HOW TO RECEIVE EMAILS:
+    // 1. Go to https://formspree.io → free account
+    // 2. Create a form, set your real email as recipient
+    // 3. Replace the endpoint below
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusEl = document.getElementById('formStatus');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const messageHtml = quill.root.innerHTML;
+      const messageText = quill.getText().trim();
+
+      if (!name || !email || messageText.length < 5) {
+        showStatus('Please fill in all fields with a meaningful message.', 'error');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showStatus('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      const emailBody = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
+          <div style="background: linear-gradient(135deg, #003262, #0b4778); color: white; padding: 24px 28px; border-radius: 12px 12px 0 0;">
+            <h2 style="margin: 0; font-size: 1.35rem;">New message from your portfolio</h2>
+            <p style="margin: 8px 0 0; opacity: 0.85; font-size: 0.95rem;">via Noman Sajid — Research Portfolio</p>
+          </div>
+          <div style="background: #f8fafc; padding: 28px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+            <p style="margin: 0 0 6px;"><strong>From:</strong> ${escapeHtml(name)}</p>
+            <p style="margin: 0 0 20px;"><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 0 0 20px;">
+            <div style="line-height: 1.65;">${messageHtml}</div>
+          </div>
+          <p style="margin-top: 16px; font-size: 0.8rem; color: #64748b; text-align: center;">
+            Sent from the contact form on your academic portfolio site.
+          </p>
+        </div>
+      `;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Sending…';
+      showStatus('', '');
+
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            name, email,
+            _replyto: email,
+            _subject: `Portfolio contact: ${name}`,
+            message: messageText,
+            message_html: emailBody
+          })
+        });
+        if (res.ok) {
+          showStatus('Message sent successfully. Thank you!', 'success');
+          form.reset();
+          quill.setContents([]);
+        } else {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || 'Something went wrong. Please try again or email me directly.');
+        }
+      } catch (err) {
+        if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
+          const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+          const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${messageText}`);
+          window.location.href = `mailto:nomansajidyt1@gmail.com?subject=${subject}&body=${body}`;
+          showStatus('Opening your email client… (configure Formspree for direct sending)', 'success');
+        } else {
+          showStatus(err.message || 'Failed to send. Please email me directly.', 'error');
+        }
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Message <span aria-hidden="true">↗</span>';
+      }
+    });
+
+    function showStatus(msg, type) {
+      statusEl.textContent = msg;
+      statusEl.className = 'form-status' + (msg ? ` show ${type}` : '');
+    }
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
